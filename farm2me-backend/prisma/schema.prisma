@@ -1,0 +1,523 @@
+// Farm2Me Prisma schema
+// Datasource: PostgreSQL (chosen for native enum, String[] and Decimal support)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  FARMER
+  BUYER
+  TRANSPORTER
+  ADMIN
+}
+
+enum Grade {
+  GRADE_A
+  GRADE_B
+  GRADE_C
+}
+
+enum ListingStatus {
+  ACTIVE
+  SOLD
+  CANCELLED
+}
+
+enum PoolStatus {
+  OPEN
+  LOCKED
+  IN_TRANSIT
+  FULFILLED
+  CANCELLED
+}
+
+enum EscrowStatus {
+  FUNDS_LOCKED
+  IN_TRANSIT
+  // Transporter has reached the buyer's delivery address and is waiting for
+  // the buyer to share their delivery PIN — see confirmArrival/confirmDelivery.
+  ARRIVED
+  DELIVERED
+  DISPUTED
+  RELEASED
+}
+
+enum DisputeStatus {
+  OPEN
+  RESOLVED
+}
+
+// Lower tiers pay a higher per-order platform commission (see
+// src/config/fees.ts); VAT (7.5%) applies on top of the commission at every
+// tier. A user upgrades by paying the tier's monthly price (see
+// subscriptions.controller.ts) — subscriptionExpiresAt reverts them to FREE
+// once it lapses.
+enum SubscriptionTier {
+  FREE
+  STANDARD
+  PREMIUM
+}
+
+// PENDING until the Monnify webhook confirms the deposit's checkout; only
+// then is the wallet actually credited (see handleSuccessfulWalletDeposit).
+enum WalletDepositStatus {
+  PENDING
+  COMPLETED
+}
+
+// A transporter's counter-offer on an open (unassigned) load — the InDrive-
+// style "name your price" option alongside just accepting the posted fee
+// outright (see acceptLoad). ACCEPTED/REJECTED are terminal; accepting one
+// offer auto-rejects every other pending offer on the same trip.
+enum DeliveryOfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+// PENDING until the Monnify webhook confirms the tip's checkout; only then
+// is the driver's wallet actually credited (see handleSuccessfulTip).
+enum TipStatus {
+  PENDING
+  COMPLETED
+}
+
+// ---------- Models ----------
+
+model User {
+  id            String   @id @default(uuid())
+  // Nullable: Google sign-up creates an account with no phone number at all
+  // (see googleAuth) — the platform still wants one eventually (delivery/
+  // driver SMS depend on it), so users are prompted to add + verify one via
+  // POST /auth/link-phone afterward, but it's no longer required up front.
+  // Not globally unique: a phone number normally maps to exactly one account
+  // (enforced in the verify-otp / link-phone controllers), but a small
+  // allowlist of test numbers is permitted one account per role for QA.
+  // @@unique below is what actually enforces "at most one account per
+  // (phone, role)" at the DB level — Postgres treats multiple NULLs in a
+  // unique index as distinct, so any number of phone-less accounts can coexist.
+  phoneNumber   String?
+  email         String?  @unique
+  // Set for email/password accounts; left null for Google-only sign-ins.
+  passwordHash  String?
+  googleId      String?  @unique
+  fullName      String
+  // Farmer-only, optional — the public name shown to buyers on listings and
+  // search results instead of the farmer's personal fullName (e.g. "Amaka's
+  // Farm" rather than "Amaka Okafor"). Falls back to fullName wherever it's
+  // null (see shapeListing in listing.controller.ts).
+  farmName      String?
+  role          Role
+  walletBalance Decimal  @default(0) @db.Decimal(14, 2)
+  isVerified    Boolean  @default(false)
+  subscriptionTier      SubscriptionTier @default(FREE)
+  // Null while on FREE; set to now()+30d on a paid upgrade. Past this date
+  // the tier is treated as FREE even though the column may still say
+  // otherwise (see requireCurrentTier in subscriptions logic) until the next
+  // renewal check clears it.
+  subscriptionExpiresAt DateTime?
+  // Admin moderation flags: isFlagged marks a party penalised in a dispute
+  // ruling; isSuspended blocks the account (e.g. failed vehicle verification).
+  isFlagged     Boolean  @default(false)
+  isSuspended   Boolean  @default(false)
+  flagReason    String?
+  locationLat   Float?
+  locationLng   Float?
+  locationLabel String?
+  // Cloudinary secure_url for a real photo the user uploaded (camera or
+  // gallery) — not a generated/initials avatar. Null falls back to the
+  // initials circle every screen already renders.
+  avatarUrl     String?
+  // Bank payout details, used for Monnify split disbursements.
+  accountNumber String?
+  bankCode      String?
+  // Set on POST /auth/forgot-password, cleared on successful reset or once
+  // expired — a single-use, time-limited credential, not a session token.
+  resetPasswordToken     String?   @unique
+  resetPasswordExpiresAt DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  listings           Listing[]          @relation("FarmerListings")
+  poolsAsBuyer       VillagePool[]       @relation("PoolBuyer")
+  poolsCreated       VillagePool[]       @relation("PoolCreatedByFarmer")
+  poolContributions  PoolContribution[] @relation("FarmerContributions")
+  tripsAsDriver      EscrowTrip[]        @relation("DriverTrips")
+  tripsAsBuyer       EscrowTrip[]        @relation("BuyerTrips")
+  disputesRaised     Dispute[]          @relation("DisputesRaised")
+  walletDeposits     WalletDeposit[]    @relation("WalletDeposits")
+  ratingsGiven       Rating[]           @relation("RatingsGiven")
+  ratingsReceived    Rating[]           @relation("RatingsReceived")
+  deliveryOffers     DeliveryOffer[]    @relation("DriverOffers")
+  tipsGiven          Tip[]              @relation("TipsGiven")
+  tipsReceived       Tip[]              @relation("TipsReceived")
+  notifications      Notification[]    @relation("UserNotifications")
+  transportRequestsMade     TransportRequest[] @relation("TransportRequestsByFarmer")
+  transportRequestsAssigned TransportRequest[] @relation("TransportRequestsAssignedDriver")
+  transportQuotesMade       TransportQuote[]   @relation("TransportQuotesByDriver")
+
+  @@unique([phoneNumber, role])
+}
+
+// A buyer's 1-5 star rating of a farmer or transporter who helped fulfil one
+// of their completed orders — only allowed once the trip is RELEASED (so the
+// order actually happened), and only once per (trip, rater, ratee) triple so
+// a buyer can't spam the same person for the same order.
+model Rating {
+  id        String      @id @default(uuid())
+  // Null for a general product-page review (see createGeneralRating) that
+  // isn't tied to a specific completed order — set for the existing
+  // "rate your order" flow on OrderDetail.
+  tripId    String?
+  trip      EscrowTrip? @relation(fields: [tripId], references: [id])
+  raterId   String
+  rater     User        @relation("RatingsGiven", fields: [raterId], references: [id])
+  rateeId   String
+  ratee     User        @relation("RatingsReceived", fields: [rateeId], references: [id])
+  rating    Int
+  comment   String?
+  createdAt DateTime    @default(now())
+
+  @@unique([tripId, raterId, rateeId])
+}
+
+// A one-off Monnify top-up of a user's in-app wallet balance — separate from
+// EscrowTrip (which funds a specific order) and the subscription flow (which
+// carries its own metadata on the same webhook). Stays PENDING until the
+// webhook confirms payment, so a retried/duplicate webhook can't double-credit
+// the wallet (see handleSuccessfulWalletDeposit).
+model WalletDeposit {
+  id         String              @id @default(uuid())
+  userId     String
+  user       User                @relation("WalletDeposits", fields: [userId], references: [id])
+  amount     Decimal             @db.Decimal(14, 2)
+  status     WalletDepositStatus @default(PENDING)
+  monnifyRef String?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+}
+
+model Listing {
+  id          String        @id @default(uuid())
+  farmerId    String
+  farmer      User          @relation("FarmerListings", fields: [farmerId], references: [id])
+  cropType    String
+  weightKg    Float
+  pricePerKg  Decimal       @db.Decimal(14, 2)
+  totalPrice  Decimal       @db.Decimal(14, 2)
+  // Smallest quantity (kg) a buyer may order from this listing — lets a
+  // farmer sell part of a listing's weight over several orders instead of
+  // only ever selling the whole thing at once.
+  minOrderKg  Float         @default(1)
+  grade       Grade
+  // Null falls back to the farmer's own saved profile location everywhere
+  // this listing's pickup point is used (Market card, product page map,
+  // transporter dispatch/pickup, delivery-fee distance) — set only when the
+  // produce actually sits somewhere else (another farm, a warehouse, etc.).
+  locationLabel String?
+  locationLat   Float?
+  locationLng   Float?
+  imageUrls   String[]
+  videoUrls   String[]      @default([])
+  isPooled    Boolean       @default(false)
+  poolId      String?
+  pool        VillagePool?  @relation("PoolListings", fields: [poolId], references: [id])
+  status      ListingStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+
+  escrowTrips EscrowTrip[]  @relation("ListingTrips")
+
+  @@index([farmerId])
+  @@index([poolId])
+}
+
+model VillagePool {
+  id              String     @id @default(uuid())
+  contractName    String
+  // Nullable: a pool can also be created by a farmer (when no open pool
+  // exists yet for their crop) as a supply-side listing awaiting a buyer —
+  // see createdByFarmerId below. Any authenticated buyer can still fund
+  // (checkout into) a pool regardless of who created it; this field is who
+  // set it up, not who's allowed to purchase from it.
+  buyerId         String?
+  buyer           User?      @relation("PoolBuyer", fields: [buyerId], references: [id])
+  // Set instead of buyerId when a farmer creates the pool.
+  createdByFarmerId String?
+  createdByFarmer   User?    @relation("PoolCreatedByFarmer", fields: [createdByFarmerId], references: [id])
+  targetWeightKg  Float
+  currentWeightKg Float      @default(0)
+  deadline        DateTime
+  pricePerKg      Decimal    @db.Decimal(14, 2)
+  cropType        String
+  status          PoolStatus @default(OPEN)
+  createdAt       DateTime   @default(now())
+  // The creator's location at pool-creation time, and how far around it the
+  // pool should be discoverable (5-10km — see createPoolSchema). Pools
+  // created before this feature existed have these as null, which is treated
+  // as "no radius restriction" (always shown) for backwards compatibility.
+  originLat Float?
+  originLng Float?
+  radiusKm  Float?
+  // Free-text detail for categories that need it (e.g. cropType "Poultry"
+  // with subType "Broiler chicken", or cropType "Feed" with subType "Black
+  // soldier fly maggots") — the farmer/seller specifies it, not a fixed list.
+  subType   String?
+
+  listings      Listing[]          @relation("PoolListings")
+  contributions PoolContribution[] @relation("PoolContributions")
+  escrowTrips   EscrowTrip[]       @relation("PoolTrips")
+
+  @@index([buyerId])
+  @@index([createdByFarmerId])
+}
+
+model EscrowTrip {
+  id           String       @id @default(uuid())
+  listingId    String?
+  listing      Listing?     @relation("ListingTrips", fields: [listingId], references: [id])
+  poolId       String?
+  pool         VillagePool? @relation("PoolTrips", fields: [poolId], references: [id])
+  // Nullable: trips can be created unassigned and later claimed by a
+  // transporter via the "accept-load" flow.
+  driverId     String?
+  driver       User?        @relation("DriverTrips", fields: [driverId], references: [id])
+  buyerId      String
+  buyer        User         @relation("BuyerTrips", fields: [buyerId], references: [id])
+  totalAmount  Decimal      @db.Decimal(14, 2)
+  // Distance-based, standard-rate delivery cost (see src/config/fees.ts) —
+  // gross, before the transporter's own commission+VAT deduction at payout.
+  logisticsFee Decimal      @db.Decimal(14, 2)
+  // Buyer-side commission + VAT, added on top of goods+delivery (this is what
+  // the buyer actually pays beyond the raw order cost). Farmer/transporter
+  // fees are deducted from their own payouts instead — see
+  // transporterServiceFee/transporterVat below and the per-farmer deduction
+  // computed at confirmDelivery time (a pooled order can have several
+  // farmers, each on their own tier, so there's no single trip-level column
+  // for it).
+  platformFee  Decimal      @db.Decimal(14, 2)
+  // Gross goods value owed to the farmer(s) before their own commission+VAT
+  // deduction (see confirmDelivery) — unchanged meaning from before.
+  farmerPayout Decimal      @db.Decimal(14, 2)
+  distanceKm   Float?
+  // How much of the listing's weight this particular order bought — null for
+  // pool orders (a pool's weight is tracked via PoolContribution instead).
+  listingQuantityKg Float?
+  // Transporter's own commission/VAT (their tier, looked up at payout time)
+  // and net payout — populated at confirmDelivery once a driver is assigned.
+  transporterServiceFee Decimal @default(0) @db.Decimal(14, 2)
+  transporterVat        Decimal @default(0) @db.Decimal(14, 2)
+  transporterPayout     Decimal @default(0) @db.Decimal(14, 2)
+  status       EscrowStatus @default(FUNDS_LOCKED)
+  pickupPin    String
+  deliveryPin  String
+  monnifyRef   String?
+  // Driver's last reported GPS position, updated while a trip is in transit.
+  driverLat       Float?
+  driverLng       Float?
+  driverLocationAt DateTime?
+  // Null until the farmer actively posts this order to the load board (see
+  // POST /transport/dispatch) — a paid, unassigned trip is otherwise
+  // invisible to transporters, so a farmer confirms the pickup details and
+  // fee before any driver can see or accept it.
+  dispatchedAt        DateTime?
+  // Farmer-entered pickup note for this specific dispatch (e.g. "Gate 3, off
+  // Ikorodu road") — shown to drivers instead of the farmer's saved profile
+  // address when set; coordinates still come from the farmer's profile.
+  pickupOverrideLabel String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  disputes Dispute[] @relation("TripDisputes")
+  ratings  Rating[]
+  offers   DeliveryOffer[] @relation("TripOffers")
+  tip      Tip?
+
+  @@index([listingId])
+  @@index([poolId])
+  @@index([driverId])
+  @@index([buyerId])
+}
+
+// A transporter's counter-offer on a specific open load — see
+// DeliveryOfferStatus. One offer per (trip, driver): re-submitting updates
+// the existing row back to PENDING rather than creating a duplicate.
+model DeliveryOffer {
+  id        String              @id @default(uuid())
+  tripId    String
+  trip      EscrowTrip          @relation("TripOffers", fields: [tripId], references: [id])
+  driverId  String
+  driver    User                @relation("DriverOffers", fields: [driverId], references: [id])
+  // The transporter's proposed logistics fee — bounded at/under the trip's
+  // current (already-collected-from-the-buyer) logisticsFee, so accepting an
+  // offer only ever needs to refund the buyer the difference, never charge
+  // them more (see acceptDeliveryOffer).
+  amount    Decimal             @db.Decimal(14, 2)
+  status    DeliveryOfferStatus @default(PENDING)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@unique([tripId, driverId])
+  @@index([tripId])
+  @@index([driverId])
+}
+
+// A buyer's optional, one-off tip to the transporter who delivered their
+// order — only offerable once the trip is RELEASED (delivery confirmed and
+// escrow paid out). At most one tip per trip.
+model Tip {
+  id         String    @id @default(uuid())
+  tripId     String    @unique
+  trip       EscrowTrip @relation(fields: [tripId], references: [id])
+  buyerId    String
+  buyer      User      @relation("TipsGiven", fields: [buyerId], references: [id])
+  driverId   String
+  driver     User      @relation("TipsReceived", fields: [driverId], references: [id])
+  amount     Decimal   @db.Decimal(14, 2)
+  status     TipStatus @default(PENDING)
+  monnifyRef String?
+  createdAt  DateTime  @default(now())
+}
+
+// Split-payout ledger: tracks each farmer's weight contribution to a pool
+model PoolContribution {
+  id          String      @id @default(uuid())
+  poolId      String
+  pool        VillagePool @relation("PoolContributions", fields: [poolId], references: [id])
+  farmerId    String
+  farmer      User        @relation("FarmerContributions", fields: [farmerId], references: [id])
+  weightKg    Float
+  confirmedAt DateTime?
+
+  @@index([poolId])
+  @@index([farmerId])
+}
+
+model Dispute {
+  id           String        @id @default(uuid())
+  escrowTripId String
+  escrowTrip   EscrowTrip    @relation("TripDisputes", fields: [escrowTripId], references: [id])
+  raisedById   String
+  raisedBy     User          @relation("DisputesRaised", fields: [raisedById], references: [id])
+  reason       String
+  evidenceUrls String[]
+  resolution   String?
+  status       DisputeStatus @default(OPEN)
+  createdAt    DateTime      @default(now())
+
+  @@index([escrowTripId])
+  @@index([raisedById])
+}
+
+// In-app notification feed — created alongside (not instead of) the
+// existing SMS sends, at the same trigger points, so the mobile/web bell
+// icon has something to show without depending on SMS delivery. escrowTripId
+// is optional and only set for trip-related events, letting the client
+// deep-link straight into that order.
+model Notification {
+  id           String    @id @default(uuid())
+  userId       String
+  user         User      @relation("UserNotifications", fields: [userId], references: [id])
+  type         String
+  title        String
+  body         String
+  escrowTripId String?
+  isRead       Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, isRead])
+}
+
+// A farmer arranging transport for their own produce, independent of any
+// buyer/listing/escrow sale — e.g. taking a harvest to a market or warehouse
+// they've chosen themselves. Deliberately separate from EscrowTrip (which is
+// tightly coupled to the buyer-commission/farmer-payout marketplace-sale
+// model) rather than forcing this into it. Kept intentionally scoped to the
+// negotiation + acceptance for now: pickupPin/deliveryPin/tripStatus are
+// reserved for the pickup-to-delivery execution flow, added in a follow-up.
+model TransportRequest {
+  id               String                 @id @default(uuid())
+  farmerId         String
+  farmer           User                   @relation("TransportRequestsByFarmer", fields: [farmerId], references: [id])
+  destinationLabel String
+  destinationLat   Float?
+  destinationLng   Float?
+  // What's being moved — shown to drivers alongside the destination so they
+  // can judge the job before quoting.
+  itemDescription  String
+  weightKg         Float
+  status           TransportRequestStatus @default(OPEN)
+  // Set once a quote is accepted (by either side).
+  driverId         String?
+  driver           User?                  @relation("TransportRequestsAssignedDriver", fields: [driverId], references: [id])
+  agreedAmount     Decimal?               @db.Decimal(14, 2)
+  // Pickup/delivery PIN + live trip status for the execution phase — null
+  // until that follow-up work generates them on acceptance.
+  pickupPin        String?
+  deliveryPin      String?
+  tripStatus       TransportTripStatus?
+  driverLat        Float?
+  driverLng        Float?
+  driverLocationAt DateTime?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  quotes TransportQuote[]
+
+  @@index([farmerId])
+  @@index([driverId])
+}
+
+enum TransportRequestStatus {
+  OPEN
+  ACCEPTED
+  CANCELLED
+}
+
+enum TransportTripStatus {
+  FUNDS_LOCKED
+  IN_TRANSIT
+  ARRIVED
+  DELIVERED
+  RELEASED
+}
+
+// One driver's live negotiation state on a TransportRequest — a single
+// mutable row per (request, driver), not a full history table: `amount` +
+// `proposedBy` always reflect whatever offer is currently on the table,
+// which either side can accept or counter (see notification.service.ts
+// callers in transport.controller.ts for the exact back-and-forth).
+model TransportQuote {
+  id         String            @id @default(uuid())
+  requestId  String
+  request    TransportRequest  @relation(fields: [requestId], references: [id])
+  driverId   String
+  driver     User              @relation("TransportQuotesByDriver", fields: [driverId], references: [id])
+  amount     Decimal           @db.Decimal(14, 2)
+  proposedBy QuoteProposer
+  status     QuoteStatus       @default(PENDING)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([requestId, driverId])
+}
+
+enum QuoteProposer {
+  FARMER
+  DRIVER
+}
+
+enum QuoteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}

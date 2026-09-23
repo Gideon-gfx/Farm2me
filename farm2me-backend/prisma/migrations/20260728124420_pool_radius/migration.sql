@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "VillagePool" ADD COLUMN     "originLat" DOUBLE PRECISION,
+ADD COLUMN     "originLng" DOUBLE PRECISION,
+ADD COLUMN     "radiusKm" DOUBLE PRECISION;

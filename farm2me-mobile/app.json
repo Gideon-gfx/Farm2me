@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "farm2me-mobile",
+    "slug": "farm2me-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "farm2me",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F7F5EF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-splash-screen",
+      "expo-web-browser",
+      "expo-video",
+      "expo-status-bar",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Farm2Me uses your location to match you with nearby farms, buyers and drivers, and to estimate delivery distance."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Farm2Me needs access to your photos so you can add pictures/videos to a listing or your profile."
+        }
+      ]
+    ]
+  }
+}

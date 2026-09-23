@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farm2me — Desktop Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Manrope,system-ui,sans-serif;background:#EDEAE0;color:#24352A}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 16px 60px}
+  .deck-head{width:min(1040px,96vw);color:#24352A}
+  .deck-head h1{margin:0;font-size:22px;font-weight:800}
+  .deck-head p{margin:4px 0 0;font-size:12px;color:#8A8578}
+  /* Each landscape "page" keeps a fixed 1.414:1 ratio and scales with the viewport. */
+  .page{width:min(1040px,96vw);height:calc(min(1040px,96vw)*0.707);background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)}
+  a{color:#2F6B3F}
+</style>
+</head>
+<body>
+<div class="deck">
+<div class="deck-head">
+  <h1>Farm2me — Desktop Web App · UI Overview</h1>
+  <p>Buyer · Farmer · Transporter roles · Escrow-first UX</p>
+</div>
+
+<section class="page" id="p1" data-screen-label="Cover">
+<div style="height:100%;box-sizing:border-box;background:#24352A;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;font-family:Manrope,sans-serif">
+<svg width="110" height="110" viewBox="0 0 64 64" fill="none"><line x1="20" y1="52" x2="20" y2="20" stroke="#E2AC49" stroke-width="2.2" stroke-linecap="round"></line><ellipse cx="20" cy="19" rx="2.8" ry="5.5" fill="#E2AC49"></ellipse><ellipse cx="15.5" cy="26" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(-32 15.5 26)"></ellipse><ellipse cx="24.5" cy="26" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(32 24.5 26)"></ellipse><ellipse cx="14.8" cy="34" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(-32 14.8 34)"></ellipse><ellipse cx="25.2" cy="34" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(32 25.2 34)"></ellipse><ellipse cx="14.8" cy="42" rx="2.6" ry="5.3" fill="#EFC878" transform="rotate(-32 14.8 42)"></ellipse><ellipse cx="25.2" cy="42" rx="2.6" ry="5.3" fill="#EFC878" transform="rotate(32 25.2 42)"></ellipse><path d="M24 51 C36 48 34 40 43 33" stroke="#8FBF9C" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1 5.5"></path><path d="M46 8 C40.5 8 37 12 37 17 c0 6.5 9 14 9 14 s9 -7.5 9 -14 C55 12 51.5 8 46 8 Z" fill="#F5EFE2"></path><ellipse cx="46" cy="16.5" rx="2.2" ry="4" fill="#D9A441"></ellipse></svg>
+<div style="text-align:center">
+<div style="font-weight:800;font-size:42px;color:#F5EFE2;letter-spacing:.02em">Farm<span style="position:relative;display:inline-block;color:#D9A441">2<svg width="23" height="10" viewBox="0 0 19 8" style="position:absolute;left:50%;transform:translateX(-50%);bottom:-11px"><path d="M1.5 4 H15 M15 4 l-4 -3 M15 4 l-4 3" stroke="#D9A441" stroke-width="2" stroke-linecap="round" fill="none"></path></svg></span>me</div>
+<div style="margin-top:20px;font-weight:600;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:#8FBF9C">Farmers · Movers · Buyers</div>
+</div>
+<div style="text-align:center;color:#F5EFE2;margin-top:10px">
+<div style="font-weight:800;font-size:19px">Desktop Web App — UI Overview</div>
+<div style="font-size:12px;color:#8FBF9C;margin-top:8px">Buyer · Farmer · Transporter roles · Escrow-first UX<br>A GeneSys Software Technology product · July 2026</div>
+</div>
+</div>
+</section>
+
+<section class="page" id="p2" data-screen-label="Onboarding">
+<div style="height:100%;box-sizing:border-box;padding:36px 46px;background:#fff;font-family:Manrope,sans-serif;color:#24352A;display:flex;flex-direction:column">
+<div style="font-weight:800;font-size:17px">1 · Onboarding — role selection</div>
+<div style="font-size:11px;color:#8A8578;margin:3px 0 14px">Split sign-in: brand panel + role cards · phone auth · escrow assurance</div>
+<div style="flex:1;border-radius:14px;border:1px solid rgba(0,0,0,.12);overflow:hidden;display:flex;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="width:300px;flex:none;background:#24352A;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:16px;padding:30px">
+<svg width="70" height="70" viewBox="0 0 64 64" fill="none"><line x1="20" y1="52" x2="20" y2="20" stroke="#E2AC49" stroke-width="2.2" stroke-linecap="round"></line><ellipse cx="20" cy="19" rx="2.8" ry="5.5" fill="#E2AC49"></ellipse><ellipse cx="15.5" cy="26" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(-32 15.5 26)"></ellipse><ellipse cx="24.5" cy="26" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(32 24.5 26)"></ellipse><ellipse cx="14.8" cy="34" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(-32 14.8 34)"></ellipse><ellipse cx="25.2" cy="34" rx="2.6" ry="5.3" fill="#E2AC49" transform="rotate(32 25.2 34)"></ellipse><ellipse cx="14.8" cy="42" rx="2.6" ry="5.3" fill="#EFC878" transform="rotate(-32 14.8 42)"></ellipse><ellipse cx="25.2" cy="42" rx="2.6" ry="5.3" fill="#EFC878" transform="rotate(32 25.2 42)"></ellipse><path d="M24 51 C36 48 34 40 43 33" stroke="#8FBF9C" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1 5.5"></path><path d="M46 8 C40.5 8 37 12 37 17 c0 6.5 9 14 9 14 s9 -7.5 9 -14 C55 12 51.5 8 46 8 Z" fill="#F5EFE2"></path><ellipse cx="46" cy="16.5" rx="2.2" ry="4" fill="#D9A441"></ellipse></svg>
+<div style="font-weight:800;font-size:24px;color:#F5EFE2">Farm<span style="color:#D9A441">2</span>me</div>
+<div style="font-size:10.5px;color:rgba(245,239,226,.75);text-align:center;line-height:1.6">One marketplace connecting farm produce, bulk buyers and transport — every payment protected by escrow.</div>
+</div>
+<div style="flex:1;background:#F7F5EF;display:flex;flex-direction:column;justify-content:center;padding:34px 46px;gap:9px">
+<div style="font-weight:800;font-size:16px;margin-bottom:4px">How will you use Farm2me?</div>
+<div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:13px;padding:13px;border:2px solid rgba(0,0,0,.06)"><div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:#DDEBD9;color:#2F6B3F">F</div><div style="flex:1"><div style="font-weight:800;font-size:12.5px">Farmer</div><div style="font-size:10px;color:#8A8578">List produce &amp; get paid via escrow</div></div><div style="width:17px;height:17px;border-radius:50%;border:2px solid #E3E1D6"></div></div>
+<div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:13px;padding:13px;border:2px solid #D9A441"><div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:#F6E7C6;color:#8A6414">B</div><div style="flex:1"><div style="font-weight:800;font-size:12.5px">Buyer</div><div style="font-size:10px;color:#8A8578">Source farm produce in bulk</div></div><div style="width:17px;height:17px;border-radius:50%;border:2px solid #D9A441;display:flex;align-items:center;justify-content:center"><div style="width:8px;height:8px;border-radius:50%;background:#D9A441"></div></div></div>
+<div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:13px;padding:13px;border:2px solid rgba(0,0,0,.06)"><div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:#E3E1D6;color:#24352A">T</div><div style="flex:1"><div style="font-weight:800;font-size:12.5px">Transporter</div><div style="font-size:10px;color:#8A8578">Find loads along your route</div></div><div style="width:17px;height:17px;border-radius:50%;border:2px solid #E3E1D6"></div></div>
+<div style="display:flex;gap:10px;margin-top:8px">
+<div style="flex:1;border:1px solid rgba(0,0,0,.12);border-radius:11px;padding:12px 14px;font-size:11px;color:#9B968A;background:#fff">+234 phone number</div>
+<div style="padding:0 30px;display:flex;align-items:center;border-radius:11px;font-weight:800;font-size:12px;background:#24352A;color:#F5EFE2">Continue</div>
+</div>
+<div style="font-size:10px;color:#8A8578">Payments protected by Farm2me Escrow</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="page" id="p3" data-screen-label="Buyer Market">
+<div style="height:100%;box-sizing:border-box;padding:36px 46px;background:#fff;font-family:Manrope,sans-serif;color:#24352A;display:flex;flex-direction:column">
+<div style="font-weight:800;font-size:17px">2 · Buyer — Market</div>
+<div style="font-size:11px;color:#8A8578;margin:3px 0 14px">Sidebar navigation with escrow wallet · produce grid with escrow-backed pricing</div>
+<div style="flex:1;border-radius:14px;border:1px solid rgba(0,0,0,.12);overflow:hidden;display:flex;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="width:170px;flex:none;background:#24352A;display:flex;flex-direction:column;padding:14px 10px">
+<div style="font-weight:800;font-size:14px;color:#F5EFE2;padding:0 8px 12px">Farm<span style="color:#D9A441">2</span>me</div>
+<div style="padding:9px 10px;border-radius:9px;background:rgba(255,255,255,.1);font-weight:700;font-size:10.5px;color:#F5EFE2;margin-bottom:3px">⌂ Market</div>
+<div style="padding:9px 10px;font-weight:700;font-size:10.5px;color:#8FBF9C;margin-bottom:3px">▤ Orders</div>
+<div style="padding:9px 10px;font-weight:700;font-size:10.5px;color:#8FBF9C;margin-bottom:3px">➤ Tracking</div>
+<div style="padding:9px 10px;font-weight:700;font-size:10.5px;color:#8FBF9C;margin-bottom:3px;display:flex">✉ Messages<span style="margin-left:auto;min-width:15px;height:15px;border-radius:100px;background:#D9A441;color:#3E2D1A;font-weight:800;font-size:8.5px;display:flex;align-items:center;justify-content:center">2</span></div>
+<div style="padding:9px 10px;font-weight:700;font-size:10.5px;color:#8FBF9C">◉ Profile</div>
+<div style="margin-top:auto;background:rgba(255,255,255,.06);border-radius:11px;padding:10px"><div style="font-size:7.5px;color:#8FBF9C;font-weight:700;letter-spacing:.08em;text-transform:uppercase">In escrow</div><div style="font-weight:800;font-size:13px;color:#F5EFE2;margin-top:3px">₦2,000,000</div><div style="height:1px;background:rgba(255,255,255,.1);margin:7px 0"></div><div style="font-size:7.5px;color:#8FBF9C;font-weight:700;letter-spacing:.08em;text-transform:uppercase">Available</div><div style="font-weight:800;font-size:11px;color:#D9A441;margin-top:2px">₦450,000</div></div>
+</div>
+<div style="flex:1;background:#F7F5EF;display:flex;flex-direction:column;min-width:0">
+<div style="display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid rgba(0,0,0,.07);background:#fff">
+<div style="flex:1;max-width:280px;background:#F7F5EF;border-radius:100px;padding:8px 13px;font-size:10px;color:#8A8578">⌕ Search produce, farms, orders…</div>
+<div style="margin-left:auto;display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:#2F6B3F;color:#F5EFE2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9px">LF</div><div><div style="font-weight:800;font-size:9.5px">Lagos Fresh Foods Ltd</div><div style="font-size:8px;color:#8A8578">Buyer · Retailer · Ikeja, Lagos</div></div></div>
+</div>
+<div style="flex:1;padding:14px 18px;overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div><div style="font-weight:800;font-size:16px">Market</div><div style="font-size:9.5px;color:#8A8578">Delivering to Lagos, NG · escrow protected</div></div>
+<div style="display:flex;gap:5px"><span style="padding:5px 11px;border-radius:100px;font-weight:700;font-size:8.5px;background:#24352A;color:#fff">All</span><span style="padding:5px 11px;border-radius:100px;font-weight:700;font-size:8.5px;background:#fff;color:#8A8578;border:1px solid rgba(0,0,0,.06)">Tubers</span><span style="padding:5px 11px;border-radius:100px;font-weight:700;font-size:8.5px;background:#fff;color:#8A8578;border:1px solid rgba(0,0,0,.06)">Grains</span><span style="padding:5px 11px;border-radius:100px;font-weight:700;font-size:8.5px;background:#fff;color:#8A8578;border:1px solid rgba(0,0,0,.06)">Vegetables</span></div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+<div style="background:#fff;border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)"><div style="height:64px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:rgba(0,0,0,.32);background:#EADFC4">Ca</div><div style="padding:9px 11px"><div style="display:flex;justify-content:space-between"><span style="font-weight:800;font-size:10.5px">Cassava (fresh)</span><span style="font-weight:800;font-size:9.5px;color:#2F6B3F">₦350/kg</span></div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Adewale Farms · Oyo</div></div></div>
+<div style="background:#fff;border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)"><div style="height:64px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:rgba(0,0,0,.32);background:#E3CDA8">Ya</div><div style="padding:9px 11px"><div style="display:flex;justify-content:space-between"><span style="font-weight:800;font-size:10.5px">Yam · Puna</span><span style="font-weight:800;font-size:9.5px;color:#2F6B3F">₦2,500/tuber</span></div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Mama Ngozi Farm · Enugu</div></div></div>
+<div style="background:#fff;border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)"><div style="height:64px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:rgba(0,0,0,.32);background:#F0DCA8">Ma</div><div style="padding:9px 11px"><div style="display:flex;justify-content:space-between"><span style="font-weight:800;font-size:10.5px">Maize (dry)</span><span style="font-weight:800;font-size:9.5px;color:#2F6B3F">₦850/kg</span></div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Danjuma Farms · Kaduna</div></div></div>
+<div style="background:#fff;border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)"><div style="height:64px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:rgba(0,0,0,.32);background:#CFE0C3">Pl</div><div style="padding:9px 11px"><div style="display:flex;justify-content:space-between"><span style="font-weight:800;font-size:10.5px">Plantain</span><span style="font-weight:800;font-size:9.5px;color:#2F6B3F">₦4,500/bunch</span></div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Osun Greenbelt Co-op</div></div></div>
+<div style="background:#fff;border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)"><div style="height:64px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:rgba(0,0,0,.32);background:#EFC9B8">To</div><div style="padding:9px 11px"><div style="display:flex;justify-content:space-between"><span style="font-weight:800;font-size:10.5px">Tomatoes</span><span style="font-weight:800;font-size:9.5px;color:#2F6B3F">₦42,000/basket</span></div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Jos Plateau Growers</div></div></div>
+<div style="background:#fff;border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)"><div style="height:64px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:rgba(0,0,0,.32);background:#E8B8AD">Pe</div><div style="padding:9px 11px"><div style="display:flex;justify-content:space-between"><span style="font-weight:800;font-size:10.5px">Pepper (ata rodo)</span><span style="font-weight:800;font-size:9.5px;color:#2F6B3F">₦38,000/bag</span></div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Kano Ridge Farms</div></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="page" id="p4" data-screen-label="Orders + Escrow">
+<div style="height:100%;box-sizing:border-box;padding:36px 46px;background:#fff;font-family:Manrope,sans-serif;color:#24352A;display:flex;flex-direction:column">
+<div style="font-weight:800;font-size:17px">3 · Orders &amp; Escrow Detail</div>
+<div style="font-size:11px;color:#8A8578;margin:3px 0 14px">Order rows with escrow status + progress · full escrow timeline with parties &amp; release action</div>
+<div style="flex:1;display:flex;gap:20px">
+<div style="flex:1;border-radius:14px;border:1px solid rgba(0,0,0,.12);background:#F7F5EF;padding:16px;display:flex;flex-direction:column;gap:8px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="font-weight:800;font-size:13px;margin-bottom:2px">My Orders</div>
+<div style="background:#fff;border-radius:12px;padding:11px 13px;border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px"><span style="font-size:8px;font-weight:700;color:#8A8578;width:48px">ORD-2041</span><div style="flex:1"><div style="font-weight:800;font-size:10px">Yam · Puna × 120 tubers</div><div style="font-size:8.5px;color:#8A8578">Mama Ngozi Farm</div></div><div style="width:60px;height:4px;border-radius:100px;background:#EFEDE5"><div style="height:100%;border-radius:100px;background:#D9A441;width:40%"></div></div><span style="font-weight:700;font-size:7.5px;padding:4px 8px;border-radius:100px;background:#F6E7C6;color:#8A6414">Funds in escrow</span><span style="font-weight:800;font-size:9.5px">₦300,000</span></div>
+<div style="background:#fff;border-radius:12px;padding:11px 13px;border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px"><span style="font-size:8px;font-weight:700;color:#8A8578;width:48px">ORD-2038</span><div style="flex:1"><div style="font-weight:800;font-size:10px">Maize (dry) · 2 tons</div><div style="font-size:8.5px;color:#8A8578">Danjuma Farms</div></div><div style="width:60px;height:4px;border-radius:100px;background:#EFEDE5"><div style="height:100%;border-radius:100px;background:#D9A441;width:60%"></div></div><span style="font-weight:700;font-size:7.5px;padding:4px 8px;border-radius:100px;background:#DDEBD9;color:#2F6B3F">In transit</span><span style="font-weight:800;font-size:9.5px">₦1,700,000</span></div>
+<div style="background:#fff;border-radius:12px;padding:11px 13px;border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px"><span style="font-size:8px;font-weight:700;color:#8A8578;width:48px">ORD-2027</span><div style="flex:1"><div style="font-weight:800;font-size:10px">Plantain · 40 bunches</div><div style="font-size:8.5px;color:#8A8578">Osun Greenbelt Co-op</div></div><div style="width:60px;height:4px;border-radius:100px;background:#EFEDE5"><div style="height:100%;border-radius:100px;background:#D9A441;width:100%"></div></div><span style="font-weight:700;font-size:7.5px;padding:4px 8px;border-radius:100px;background:#E5E5E0;color:#6B6B60">Funds released</span><span style="font-weight:800;font-size:9.5px">₦180,000</span></div>
+<div style="background:#fff;border-radius:12px;padding:13px;border:1px solid rgba(0,0,0,.07);margin-top:6px">
+<div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:8px;font-weight:700;color:#8A8578">ORD-2038</div><div style="font-weight:800;font-size:12px;margin-top:2px">Maize (dry) · 2 tons</div></div><span style="font-weight:700;font-size:8px;padding:4px 9px;border-radius:100px;background:#DDEBD9;color:#2F6B3F">In transit</span></div>
+<div style="display:flex;justify-content:space-between;border-top:1px solid rgba(0,0,0,.06);padding-top:8px;margin-top:8px"><span style="font-size:9px;color:#8A8578">Total (held in escrow)</span><span style="font-weight:800;font-size:12px">₦1,700,000</span></div>
+<div style="display:flex;gap:8px;margin-top:8px">
+<div style="flex:1;background:#F7F5EF;border-radius:9px;padding:8px"><div style="font-size:7px;color:#8A8578;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Farmer</div><div style="font-weight:800;font-size:8.5px;margin-top:2px">Danjuma Farms</div></div>
+<div style="flex:1;background:#F7F5EF;border-radius:9px;padding:8px"><div style="font-size:7px;color:#8A8578;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Transporter</div><div style="font-weight:800;font-size:8.5px;margin-top:2px">Emeka Okafor · KDN-482-XA</div></div>
+</div>
+<div style="height:32px;border-radius:9px;background:#2F6B3F;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9.5px;margin-top:8px">Confirm delivery &amp; release funds</div>
+</div>
+</div>
+<div style="width:300px;flex:none;border-radius:14px;border:1px solid rgba(0,0,0,.12);background:#fff;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="font-weight:800;font-size:12px;margin-bottom:12px">Escrow timeline</div>
+<div style="display:flex;gap:10px"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:18px;height:18px;border-radius:50%;background:#2F6B3F;color:#fff;font-weight:800;font-size:9px;display:flex;align-items:center;justify-content:center">✓</div><div style="width:2px;flex:1;min-height:14px;background:#2F6B3F"></div></div><div style="padding-bottom:12px"><div style="font-weight:800;font-size:10.5px">Order placed</div><div style="font-size:8.5px;color:#8A8578">Buyer submitted the order</div></div></div>
+<div style="display:flex;gap:10px"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:18px;height:18px;border-radius:50%;background:#2F6B3F;color:#fff;font-weight:800;font-size:9px;display:flex;align-items:center;justify-content:center">✓</div><div style="width:2px;flex:1;min-height:14px;background:#2F6B3F"></div></div><div style="padding-bottom:12px"><div style="font-weight:800;font-size:10.5px">Funds in escrow</div><div style="font-size:8.5px;color:#8A8578">Buyer's payment locked by Farm2me</div></div></div>
+<div style="display:flex;gap:10px"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:18px;height:18px;border-radius:50%;background:#D9A441;color:#3E2D1A;font-weight:800;font-size:8px;display:flex;align-items:center;justify-content:center">●</div><div style="width:2px;flex:1;min-height:14px;background:#E3E1D6"></div></div><div style="padding-bottom:12px"><div style="font-weight:800;font-size:10.5px">In transit</div><div style="font-size:8.5px;color:#8A8578">Transporter is moving the load</div></div></div>
+<div style="display:flex;gap:10px"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #E3E1D6;box-sizing:border-box"></div><div style="width:2px;flex:1;min-height:14px;background:#E3E1D6"></div></div><div style="padding-bottom:12px"><div style="font-weight:800;font-size:10.5px;color:#B4B0A2">Delivered</div><div style="font-size:8.5px;color:#8A8578">Load scanned at destination</div></div></div>
+<div style="display:flex;gap:10px"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid #E3E1D6;box-sizing:border-box"></div></div><div><div style="font-weight:800;font-size:10.5px;color:#B4B0A2">Funds released</div><div style="font-size:8.5px;color:#8A8578">Escrow paid out to farmer &amp; transporter</div></div></div>
+<div style="background:#F6E7C6;border-radius:10px;padding:10px;font-size:8.5px;font-weight:700;color:#8A6414;margin-top:12px;line-height:1.5">🔒 Funds release automatically when the buyer confirms delivery</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="page" id="p5" data-screen-label="Tracking">
+<div style="height:100%;box-sizing:border-box;padding:36px 46px;background:#fff;font-family:Manrope,sans-serif;color:#24352A;display:flex;flex-direction:column">
+<div style="font-weight:800;font-size:17px">4 · Live Tracking</div>
+<div style="font-size:11px;color:#8A8578;margin:3px 0 14px">Uber-style route map · driver card with call action · escrow release note</div>
+<div style="flex:1;display:flex;gap:20px">
+<div style="position:relative;flex:1;border-radius:14px;overflow:hidden;background:#E7ECE3;border:1px solid rgba(0,0,0,.12);box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="position:absolute;inset:0;background-image:linear-gradient(rgba(47,107,63,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(47,107,63,.07) 1px,transparent 1px);background-size:38px 38px"></div>
+<div style="position:absolute;left:14%;top:10%;width:26%;height:30%;border-radius:40%;background:rgba(143,191,156,.35)"></div>
+<div style="position:absolute;right:8%;bottom:14%;width:30%;height:26%;border-radius:40%;background:rgba(143,191,156,.28)"></div>
+<svg style="position:absolute;inset:0" width="100%" height="100%" viewBox="0 0 600 440" preserveAspectRatio="none"><path d="M90 370 C200 340 190 230 300 200 C410 170 400 110 505 78" stroke="#24352A" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 11" fill="none"></path></svg>
+<div style="position:absolute;left:48%;top:42%;width:36px;height:36px;border-radius:50%;background:#D9A441;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M2 16 V8 h11 v8 M13 10 h5 l3 3 v3 h-3" stroke="#3E2D1A" stroke-width="2" stroke-linejoin="round" fill="none"></path><circle cx="7" cy="17.5" r="1.8" fill="#3E2D1A"></circle><circle cx="17" cy="17.5" r="1.8" fill="#3E2D1A"></circle></svg></div>
+<div style="position:absolute;left:10%;top:82%;padding:5px 11px;border-radius:100px;background:#fff;font-weight:700;font-size:10px;box-shadow:0 1px 5px rgba(0,0,0,.15)">Kaduna</div>
+<div style="position:absolute;right:6%;top:10%;padding:5px 11px;border-radius:100px;background:#24352A;color:#fff;font-weight:700;font-size:10px">Lagos</div>
+</div>
+<div style="width:300px;flex:none;background:#fff;border-radius:14px;padding:18px;border:1px solid rgba(0,0,0,.12);display:flex;flex-direction:column;gap:11px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="display:flex;align-items:center;justify-content:space-between"><div style="font-weight:800;font-size:13px">Maize (dry) · 2 tons</div><div style="font-weight:800;font-size:10px;color:#2F6B3F">ETA 4:40 PM</div></div>
+<div style="font-size:10px;color:#8A8578">Danjuma Farms, Kaduna → Your depot, Lagos</div>
+<div style="height:5px;border-radius:100px;background:#EFEDE5"><div style="height:100%;background:#2F6B3F;border-radius:100px;width:62%"></div></div>
+<div style="display:flex;align-items:center;gap:10px;border-top:1px solid rgba(0,0,0,.06);padding-top:11px">
+<div style="width:36px;height:36px;border-radius:50%;background:#F6E7C6;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#8A6414">EO</div>
+<div style="flex:1"><div style="font-weight:800;font-size:11px">Emeka Okafor</div><div style="font-size:9px;color:#8A8578">Dyna truck · KDN-482-XA</div></div>
+<div style="width:32px;height:32px;border-radius:50%;background:#2F6B3F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px">✆</div>
+</div>
+<div style="background:#F6E7C6;border-radius:10px;padding:10px;font-size:9px;font-weight:700;color:#8A6414;line-height:1.5">🔒 ₦1,700,000 held in escrow · releases on your confirmation</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="page" id="p6" data-screen-label="Farmer + Transporter">
+<div style="height:100%;box-sizing:border-box;padding:36px 46px;background:#fff;font-family:Manrope,sans-serif;color:#24352A;display:flex;flex-direction:column">
+<div style="font-weight:800;font-size:17px">5 · Farmer &amp; Transporter Views</div>
+<div style="font-size:11px;color:#8A8578;margin:3px 0 14px">Farm dashboard with listings &amp; escrow stats · Uber-driver-style load board with online toggle</div>
+<div style="flex:1;display:flex;gap:20px">
+<div style="flex:1;border-radius:14px;border:1px solid rgba(0,0,0,.12);background:#F7F5EF;padding:16px;display:flex;flex-direction:column;gap:9px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:800;font-size:14px">My Farm</div><div style="font-size:9px;color:#8A8578">Adewale Farms · Oyo State</div></div><div style="padding:8px 16px;border-radius:9px;background:#2F6B3F;color:#fff;font-weight:800;font-size:9.5px">＋ Add produce listing</div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<div style="background:#fff;border-radius:11px;padding:11px;border:1px solid rgba(0,0,0,.07)"><div style="font-weight:800;font-size:16px">6</div><div style="font-size:8px;color:#8A8578;margin-top:2px">Active listings</div></div>
+<div style="background:#fff;border-radius:11px;padding:11px;border:1px solid rgba(0,0,0,.07)"><div style="font-weight:800;font-size:16px;color:#D9A441">3</div><div style="font-size:8px;color:#8A8578;margin-top:2px">Pending deals</div></div>
+<div style="background:#fff;border-radius:11px;padding:11px;border:1px solid rgba(0,0,0,.07)"><div style="font-weight:800;font-size:16px;color:#2F6B3F">₦795k</div><div style="font-size:8px;color:#8A8578;margin-top:2px">In escrow</div></div>
+</div>
+<div style="font-weight:800;font-size:10.5px;margin-top:2px">My listings</div>
+<div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:11px;padding:10px;border:1px solid rgba(0,0,0,.07)"><div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:rgba(0,0,0,.35);background:#EADFC4">Ca</div><div style="flex:1"><div style="font-weight:800;font-size:9.5px">Cassava (fresh)</div><div style="font-size:8px;color:#8A8578">₦350/kg · 4 tons available</div></div><span style="font-weight:700;font-size:7.5px;padding:4px 8px;border-radius:100px;background:#DDEBD9;color:#2F6B3F">Live</span></div>
+<div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:11px;padding:10px;border:1px solid rgba(0,0,0,.07)"><div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:rgba(0,0,0,.35);background:#CFE0C3">Pl</div><div style="flex:1"><div style="font-weight:800;font-size:9.5px">Plantain</div><div style="font-size:8px;color:#8A8578">₦4,500/bunch · 90 bunches</div></div><span style="font-weight:700;font-size:7.5px;padding:4px 8px;border-radius:100px;background:#DDEBD9;color:#2F6B3F">Live</span></div>
+<div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:11px;padding:10px;border:1px solid rgba(0,0,0,.07)"><div style="width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:rgba(0,0,0,.35);background:#F0DCA8">Ma</div><div style="flex:1"><div style="font-weight:800;font-size:9.5px">Maize (wet)</div><div style="font-size:8px;color:#8A8578">Harvest in 3 weeks · pre-orders</div></div><span style="font-weight:700;font-size:7.5px;padding:4px 8px;border-radius:100px;background:#F6E7C6;color:#8A6414">Scheduled</span></div>
+</div>
+<div style="flex:1;border-radius:14px;border:1px solid rgba(0,0,0,.12);background:#F7F5EF;padding:16px;display:flex;flex-direction:column;gap:9px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-weight:800;font-size:14px">Jobs</div><div style="font-size:9px;color:#8A8578">Loads matched to your route &amp; vehicle</div></div><div style="display:flex;align-items:center;gap:8px;background:#24352A;border-radius:100px;padding:6px 8px 6px 13px"><span style="font-weight:800;font-size:9px;color:#F5EFE2">Online</span><div style="width:32px;height:18px;border-radius:100px;padding:2px;box-sizing:border-box;background:#2F6B3F"><div style="width:14px;height:14px;border-radius:50%;background:#fff;margin-left:14px"></div></div></div></div>
+<div style="background:#fff;border-radius:12px;padding:12px;border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-weight:800;font-size:10.5px">Oyo → Ibadan</div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Cassava · 1.5 tons · 54 km</div></div><span style="font-weight:700;font-size:7px;padding:4px 7px;border-radius:100px;background:#F6E7C6;color:#8A6414">Escrow funded</span><span style="font-weight:800;font-size:10px;color:#2F6B3F">₦35,000</span><span style="padding:7px 13px;border-radius:100px;background:#D9A441;color:#3E2D1A;font-weight:800;font-size:8.5px">Accept</span></div>
+<div style="background:#fff;border-radius:12px;padding:12px;border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-weight:800;font-size:10.5px">Jos → Abuja</div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Tomatoes · 80 baskets · 288 km</div></div><span style="font-weight:700;font-size:7px;padding:4px 7px;border-radius:100px;background:#F6E7C6;color:#8A6414">Escrow funded</span><span style="font-weight:800;font-size:10px;color:#2F6B3F">₦150,000</span><span style="padding:7px 13px;border-radius:100px;background:#D9A441;color:#3E2D1A;font-weight:800;font-size:8.5px">Accept</span></div>
+<div style="background:#fff;border-radius:12px;padding:12px;border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-weight:800;font-size:10.5px">Kano → Kaduna</div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">Pepper · 60 bags · 226 km</div></div><span style="font-weight:700;font-size:7px;padding:4px 7px;border-radius:100px;background:#F6E7C6;color:#8A6414">Escrow funded</span><span style="font-weight:800;font-size:10px;color:#2F6B3F">₦120,000</span><span style="padding:7px 13px;border-radius:100px;background:#D9A441;color:#3E2D1A;font-weight:800;font-size:8.5px">Accept</span></div>
+<div style="font-weight:800;font-size:10.5px;margin-top:2px">My trips</div>
+<div style="background:#fff;border-radius:12px;padding:12px;border:1px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:10px"><div style="flex:1"><div style="font-weight:800;font-size:10px">Maize · 2 tons · Ibadan → Lagos</div><div style="font-size:8.5px;color:#8A8578;margin-top:2px">For Danjuma Farms</div></div><span style="font-weight:700;font-size:7px;padding:4px 7px;border-radius:100px;background:#DDEBD9;color:#2F6B3F">In transit</span><span style="font-weight:800;font-size:10px">₦85,000</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="page" id="p7" data-screen-label="Messages + Profile">
+<div style="height:100%;box-sizing:border-box;padding:36px 46px;background:#fff;font-family:Manrope,sans-serif;color:#24352A;display:flex;flex-direction:column">
+<div style="font-weight:800;font-size:17px">6 · Messages &amp; Profile</div>
+<div style="font-size:11px;color:#8A8578;margin:3px 0 14px">Two-pane chat with escrow notifications · profile with escrow wallet actions</div>
+<div style="flex:1;display:flex;gap:20px">
+<div style="flex:1.2;border-radius:14px;border:1px solid rgba(0,0,0,.12);background:#F7F5EF;padding:14px;display:flex;gap:12px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="width:190px;flex:none;display:flex;flex-direction:column;gap:7px">
+<div style="display:flex;align-items:center;gap:8px;background:#fff;border-radius:11px;padding:9px;border:1px solid rgba(0,0,0,.07)"><div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:8.5px;color:rgba(0,0,0,.4);background:#E3CDA8">MN</div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:8.5px">Mama Ngozi Farm</div><div style="font-size:7.5px;color:#8A8578;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">The yams are harvested and crated</div></div></div>
+<div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.6);border-radius:11px;padding:9px;border:1px solid rgba(0,0,0,.07)"><div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:8.5px;color:rgba(0,0,0,.4);background:#F6E7C6">EO</div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:8.5px">Emeka O. · Driver</div><div style="font-size:7.5px;color:#8A8578;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Crossed the toll gate, ETA 45 mins</div></div><span style="min-width:13px;height:13px;border-radius:100px;background:#2F6B3F;color:#fff;font-weight:800;font-size:7px;display:flex;align-items:center;justify-content:center">2</span></div>
+<div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.6);border-radius:11px;padding:9px;border:1px solid rgba(0,0,0,.07)"><div style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:8.5px;color:rgba(0,0,0,.4);background:#DDEBD9">F2</div><div style="flex:1;min-width:0"><div style="font-weight:800;font-size:8.5px">Farm2me Escrow</div><div style="font-size:7.5px;color:#8A8578;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">₦180,000 released to Osun Greenbelt</div></div></div>
+</div>
+<div style="flex:1;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.07);display:flex;flex-direction:column;overflow:hidden">
+<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid rgba(0,0,0,.06)"><div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:8px;color:rgba(0,0,0,.4);background:#E3CDA8">MN</div><div><div style="font-weight:800;font-size:9.5px">Mama Ngozi Farm</div><div style="font-size:7.5px;color:#2F6B3F;font-weight:700">● Online</div></div></div>
+<div style="flex:1;padding:11px;display:flex;flex-direction:column;gap:7px;background:#FBFAF6">
+<div style="max-width:78%;padding:8px 10px;border-radius:11px;font-size:8.5px;line-height:1.5;align-self:flex-start;background:#fff;border:1px solid rgba(0,0,0,.05)">Good morning! The 120 tubers you ordered are harvested and crated for pickup.</div>
+<div style="max-width:78%;padding:8px 10px;border-radius:11px;font-size:8.5px;line-height:1.5;align-self:flex-end;background:#2F6B3F;color:#fff">Excellent. Has the transporter been assigned yet?</div>
+<div style="max-width:78%;padding:8px 10px;border-radius:11px;font-size:8.5px;line-height:1.5;align-self:flex-start;background:#fff;border:1px solid rgba(0,0,0,.05)">Yes — Emeka O. picks up this afternoon. Escrow shows funds locked, so we ship with confidence.</div>
+</div>
+<div style="display:flex;gap:7px;padding:9px 11px;border-top:1px solid rgba(0,0,0,.06)"><div style="flex:1;border:1px solid rgba(0,0,0,.1);border-radius:100px;padding:7px 11px;font-size:8.5px;color:#9B968A;background:#F7F5EF">Type a message…</div><div style="width:28px;height:28px;border-radius:50%;background:#2F6B3F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px">➤</div></div>
+</div>
+</div>
+<div style="width:280px;flex:none;display:flex;flex-direction:column;gap:12px">
+<div style="border-radius:14px;border:1px solid rgba(0,0,0,.12);background:#fff;padding:14px;display:flex;align-items:center;gap:11px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="width:42px;height:42px;border-radius:50%;background:#2F6B3F;color:#F5EFE2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px">LF</div>
+<div style="flex:1"><div style="font-weight:800;font-size:11.5px">Lagos Fresh Foods Ltd</div><div style="font-size:8.5px;color:#8A8578;margin-top:1px">Buyer · Retailer · Ikeja, Lagos</div></div>
+<span style="font-weight:700;font-size:7.5px;padding:4px 8px;border-radius:100px;background:#DDEBD9;color:#2F6B3F">Verified</span>
+</div>
+<div style="border-radius:14px;background:#24352A;padding:16px;display:flex;flex-direction:column;gap:11px;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="font-weight:800;font-size:11px;color:#F5EFE2">Escrow wallet</div>
+<div><div style="font-size:8px;color:#8FBF9C;font-weight:700;letter-spacing:.08em;text-transform:uppercase">In escrow</div><div style="font-weight:800;font-size:19px;color:#F5EFE2;margin-top:3px">₦2,000,000</div></div>
+<div><div style="font-size:8px;color:#8FBF9C;font-weight:700;letter-spacing:.08em;text-transform:uppercase">Available</div><div style="font-weight:800;font-size:15px;color:#D9A441;margin-top:3px">₦450,000</div></div>
+<div style="display:flex;gap:8px"><div style="flex:1;height:30px;border-radius:9px;background:#D9A441;color:#3E2D1A;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9px">Withdraw</div><div style="flex:1;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.2);color:#F5EFE2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9px">Top up</div></div>
+</div>
+<div style="border-radius:14px;border:1px solid rgba(0,0,0,.12);background:#fff;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+<div style="display:flex;justify-content:space-between;padding:11px 13px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="font-weight:700;font-size:9.5px">Payments &amp; escrow</span><span style="color:#C5C1B4;font-weight:800">›</span></div>
+<div style="display:flex;justify-content:space-between;padding:11px 13px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="font-weight:700;font-size:9.5px">Saved farms</span><span style="color:#C5C1B4;font-weight:800">›</span></div>
+<div style="display:flex;justify-content:space-between;padding:11px 13px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="font-weight:700;font-size:9.5px">Support</span><span style="color:#C5C1B4;font-weight:800">›</span></div>
+<div style="display:flex;justify-content:space-between;padding:11px 13px;border-bottom:1px solid rgba(0,0,0,.06)"><span style="font-weight:700;font-size:9.5px;color:#2F6B3F">Switch role</span><span style="color:#C5C1B4;font-weight:800">›</span></div>
+<div style="display:flex;justify-content:space-between;padding:11px 13px"><span style="font-weight:700;font-size:9.5px;color:#B4552E">Log out</span><span style="color:#C5C1B4;font-weight:800">›</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+</body>
+</html>
